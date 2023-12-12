@@ -63,35 +63,42 @@ def main():
     # User input for the URL
     url = st.text_input("Enter the URL of the article:")
 
-    # Check if the user has provided a URL
+    # Check if the user has provided both a topic and a URL
     if st.button("POST"):
-        if url:
-            # Check if the input is a valid URL
-            if not validators.url(url):
-                st.error("Non-URL text entered. Please enter a valid URL and try again.")
-                return
+        if not topic and not url:
+            st.error("Please enter either the topic or the URL, or both.")
+            return
+        elif not topic:
+            st.error("No topic inputted. Please input a topic.")
+            return
+        elif not url:
+            st.error("No URL inputted. Please input a URL.")
+            return
+        elif not validators.url(url):
+            st.error("Non-URL text entered. Please enter a valid URL and try again.")
+            return
             
-            try:
-                # Extract text from the URL
-                article_text = get_text_from_url(url)
+        try:
+            # Extract text from the URL
+            article_text = get_text_from_url(url)
 
-                # Check if text extraction was successful
-                if article_text:
-                    # Use the model to make predictions
-                    prediction = model.predict([article_text])[0]
+            # Check if text extraction was successful
+            if article_text:
+                # Use the model to make predictions
+                prediction = model.predict([article_text])[0]
 
-                    # Display the appropriate message
-                    if prediction == 1.0:
-                        st.success(f"Thank you for adding to the Health Clique! Your article on '{topic}' has been saved.")
-                    else:
-                        st.warning(f"Sorry, your article on '{topic}' is not health-related and cannot be saved. Try again.")
+                # Display the appropriate message
+                if prediction == 1.0:
+                    st.success(f"Thank you for adding to the Health Clique! Your article on '{topic}' has been saved.")
+                else:
+                    st.warning(f"Sorry, your article on '{topic}' is not health-related and cannot be saved. Try again.")
 
-            except ValueError as ve:
-                st.error(f"Error: {ve}")
-            except ModelPredictionError as mpe:
-                st.error(f"Model Prediction Error: {str(mpe)}")
-            except Exception as e:
-                st.error("An unexpected error occurred. Please try again.")
+        except ValueError as ve:
+            st.error(f"Error: {ve}")
+        except ModelPredictionError as mpe:
+            st.error(f"Model Prediction Error: {str(mpe)}")
+        except Exception as e:
+            st.error("An unexpected error occurred. Please try again.")
 
 if __name__ == "__main__":
     main()
