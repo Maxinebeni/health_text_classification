@@ -55,7 +55,7 @@ def main():
 
     st.write("\n\n")
 
-    st.title("Health Article Repository")
+    st.title("Health-Article Repository")
 
     # Input box for the topic of the article
     topic = st.text_input("Topic of your article (e.g., Cancer, HIV/AIDS):")
